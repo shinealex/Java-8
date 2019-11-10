@@ -1,12 +1,12 @@
 package shine.java8.java8;
 
-public class ProdcutPojo {
+public class Prodcut {
 	
 	private int Id;
 	private String name;
 	private double price;
 	
-	public ProdcutPojo(int id, String name, double price) {
+	public Prodcut(int id, String name, double price) {
 		super();
 		Id = id;
 		this.name = name;

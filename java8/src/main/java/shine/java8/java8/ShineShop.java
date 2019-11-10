@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public class ShineShop {
 	
-	Map<Integer, List<ProdcutPojo>> productsMap;
+	Map<Integer, List<Prodcut>> productsMap;
     
     /**
      *This method reading data from CSV files and storing into List.
@@ -36,7 +36,7 @@ public class ShineShop {
 					.lines(Paths.get("src/main/resources/product-data.csv"))
 					.skip(1)
 					.map(mapToProduct)
-			        .collect(Collectors.groupingBy(ProdcutPojo::getId));
+			        .collect(Collectors.groupingBy(Prodcut::getId));
     		
     	} catch (IOException e){
     		e.printStackTrace();
@@ -45,9 +45,15 @@ public class ShineShop {
 
     /**
      * List available products
+     * Another wonderful feature in Stream - flatMap ( Aggregating all nested lists here...) 
      */
-    public List<String> getProducts() {
-        return Collections.emptyList();
+    public List<Prodcut> getProducts() {
+    	
+        return productsMap
+        		.values()
+        		.stream()
+        		.flatMap(l -> l.stream())
+        		.collect(Collectors.toList());
     }
 
     /**
@@ -95,9 +101,9 @@ public class ShineShop {
 		new ShineShop().loadProducts();
 	}
 	
-	private static Function<String, ProdcutPojo> mapToProduct = (line) -> {
+	private static Function<String, Prodcut> mapToProduct = (line) -> {
 		  String[] p = line.split(",");
-		  return new ProdcutPojo(Integer.parseInt(p[0]), p[1], Double.parseDouble(p[2]));
+		  return new Prodcut(Integer.parseInt(p[0]), p[1], Double.parseDouble(p[2]));
 	};
 
 }
