@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 public class ShineShop {
 	
 	Map<Integer, List<Prodcut>> productsMap;
+	Optional<Prodcut> productCheck = Optional.empty();
+	Cart cart = new Cart();
     
     /**
      *This method reading data from CSV files and storing into List.
@@ -32,11 +35,10 @@ public class ShineShop {
     public void loadProducts() {
     	try {
 			
-    	productsMap = Files
+			productsMap = Files
 					.lines(Paths.get("src/main/resources/product-data.csv"))
-					.skip(1)
-					.map(mapToProduct)
-			        .collect(Collectors.groupingBy(Prodcut::getId));
+					.skip(1).map(mapToProduct)
+					.collect(Collectors.groupingBy(Prodcut::getId));
     		
     	} catch (IOException e){
     		e.printStackTrace();
@@ -47,59 +49,54 @@ public class ShineShop {
      * List available products
      * Another wonderful feature in Stream - flatMap ( Aggregating all nested lists here...) 
      */
-    public List<Prodcut> getProducts() {
-    	
-        return productsMap
-        		.values()
-        		.stream()
-        		.flatMap(l -> l.stream())
-        		.collect(Collectors.toList());
-    }
+	public List<Prodcut> getProducts() {
+
+		return productsMap.values().stream().flatMap(l -> l.stream())
+				.collect(Collectors.toList());
+	}
 
     /**
-     * Display available products
+     * Display available products on Console 
+     * 
      */
-    public String displayProducts() {
-        return "";  
-    }
+	public void displayProducts() {
+		
+		getProducts().forEach(
+				e -> {
+					System.out.println("Product Name : " + e.getName()
+							+ " Product Price : " + e.getPrice());
+				});
+	}
+	
     /**
      * Add a product to the Basket
      */
-    public void addProductToBasket(String productId) {
-        // TODO Exercise 2a - Add products to the basket
-        System.out.println("Add Product Not Implemented");
+    public void addProductToBasket(Integer productId) {
+      cart.addProduct(productsMap.get(productId).get(0));
     }
 
     /**
      * Get the items in the basket
      */
-    public List getBasketItems(){
-        // TODO Exercise 2a - Add products to the basket
-        System.out.println("Get Basket Items Not Implemented");
-        return Collections.emptyList();
+    public List<Prodcut> getBasketItems(){
+        return cart.getProduct();
     }
 
     /**
      * Remove a product from the Basket
      */
-    public void removeProductFromBasket(String productId) {
-        // TODO Exercise 2b - Remove products from the basket
-        System.out.println("Remove Product Not Implemented");
+    public void removeProductFromBasket(Integer productId) {
+    	cart.remove(productsMap.get(productId).get(0));
     }
 
     /**
      * Return the total value of the products in the basket
+     * 
+     * Happy to get the advantage of Optional Interface here - I dont worry whether it is null or value - my code will not fail neither business case :-) 
      */
-    public BigDecimal getTotal() {
-        // TODO Exercise 2c - Show the total value of products in the basket
-        System.out.println("Get Total Not Implemented");
-        return BigDecimal.ZERO;
+    public double getTotal() {
+        return cart.getProduct().stream().mapToDouble(e -> e.getPrice()).sum();
     }
-
-
-	public static void main(String[] args) {
-		new ShineShop().loadProducts();
-	}
 	
 	private static Function<String, Prodcut> mapToProduct = (line) -> {
 		  String[] p = line.split(",");
