@@ -1,7 +1,7 @@
 # Java-8
 Java 8 Features
 
-This Repository contains two projects.
-
-1. Java8Lambda (This project illustrate the understanding of Java 8 Lambda expression in Details)
-2. Java8Streams (Showcasing the benefits and best way to implement)
+This project to showcase the familiarities and understanding of Java 8 and features like lambda expression, Stream API, java.util.functions like Optional, Predicate etc.
+This small project is developed by TDD (Test Driven development approach.)
+For any queries or suggestion, please write to me -  shinekuttiadi@gmail.com
+This project runs successfully. Development and Test are done on Eclisplse ID and it is a maven project. You can very well download into your local machine and explore more.
