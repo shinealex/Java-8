@@ -92,7 +92,6 @@ public class ShineShop {
     /**
      * Return the total value of the products in the basket
      * 
-     * Happy to get the advantage of Optional Interface here - I dont worry whether it is null or value - my code will not fail neither business case :-) 
      */
     public double getTotal() {
         return cart.getProduct().stream().mapToDouble(e -> e.getPrice()).sum();
